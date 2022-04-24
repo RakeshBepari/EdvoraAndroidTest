@@ -1,5 +1,7 @@
 package com.example.mobiletestrakesh
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,9 +12,11 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.content.ContextCompat.getSystemService
 import com.example.mobiletestrakesh.presentation.screens.MainScreen
 import com.example.mobiletestrakesh.ui.theme.MobileTestRakeshTheme
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -31,7 +35,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
 
 
 

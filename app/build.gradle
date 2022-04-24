@@ -105,5 +105,8 @@ dependencies {
     implementation "io.coil-kt:coil-compose:2.0.0-rc03" // Contains Image Loader
 //    implementation "io.coil-kt:coil-base:2.0.0-rc03" // Does not contain Image Loader and have to be created
 
+    //Swipe Refresh
+    implementation "com.google.accompanist:accompanist-swiperefresh:0.24.2-alpha"
+
 
 }

@@ -1,7 +1,6 @@
 package com.example.mobiletestrakesh.presentation.screens
 
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,20 +18,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
 import com.example.mobiletestrakesh.R
 import com.example.mobiletestrakesh.domain.model.RidesItem
-import com.example.mobiletestrakesh.other.Constants
 import com.example.mobiletestrakesh.presentation.RidesFilter
 import com.example.mobiletestrakesh.presentation.RidesListsEvent
 import com.example.mobiletestrakesh.presentation.RidesViewModel
 import com.example.mobiletestrakesh.ui.theme.*
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
 fun MainScreen(ridesViewModel: RidesViewModel = hiltViewModel()) {
 
-    val state = ridesViewModel.state
+    val state = ridesViewModel.uiState
 
+    val swipeRefreshState = rememberSwipeRefreshState(
+        isRefreshing = ridesViewModel.uiState.isRefreshing
+    )
 
     Surface() {
         Scaffold(
@@ -73,6 +75,8 @@ fun MainScreen(ridesViewModel: RidesViewModel = hiltViewModel()) {
         ) {
 
             var showFilterDialog by rememberSaveable { mutableStateOf(false) }
+
+
 
             Column(
                 modifier = Modifier
@@ -155,7 +159,24 @@ fun MainScreen(ridesViewModel: RidesViewModel = hiltViewModel()) {
 
                 }
 
-                AllRides(state.ridesList)
+                if (state.isLoading){
+                    Box(modifier=Modifier.fillMaxSize()) {
+                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center),color = Color.Green)
+                    }
+
+                }else{
+
+
+                    SwipeRefresh(state = swipeRefreshState,
+                        onRefresh = {
+                            ridesViewModel.onEvent(RidesListsEvent.Refresh)
+                        }
+                    ){
+                        AllRides(state.ridesList)
+                    }
+
+
+                }
 
             }
 
