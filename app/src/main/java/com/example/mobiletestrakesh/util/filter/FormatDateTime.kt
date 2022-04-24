@@ -3,6 +3,10 @@ package com.example.mobiletestrakesh.util.filter
 import java.text.SimpleDateFormat
 import java.util.*
 
+
+/**
+ * A class used for formatting date time of a ride item
+ * */
 object FormatDateTime {
     fun getFormattedDateTime(dateTime: String): String {
 

@@ -203,27 +203,10 @@ fun MainScreen(ridesViewModel: RidesViewModel = hiltViewModel()) {
                                 )
                                 .align(Alignment.BottomEnd)
                         ) {
-                            /**FilterDialog(
-                            allStateList = state.allStateFilter,
-                            allCityList = state.allCityFilter,
-                            stateCityList = state.stateCityFilter,
-                            selectedStateCity = state.selectedStateCity,
-
-                            /** Tells the view model to filter
-                             * the list acc to given state */
-                            filterSelectedStateCity = { currentStateCity->
-
-                            ridesViewModel.onEvent(RidesListsEvent.FilterStateCity(
-                            selectedStateCity = currentStateCity,
-                            ))
-                            },
-                            onDismiss = {
-                            showFilterDialog = false
-                            }
-                            )*/
 
 
-                            DemoFilterDialog(
+
+                            FilterDialog(
                                 allStateList = state.allStateFilter,
                                 allCityList = state.allCityFilter,
                                 stateCityList = state.stateCityFilter,
@@ -236,20 +219,15 @@ fun MainScreen(ridesViewModel: RidesViewModel = hiltViewModel()) {
                                         )
                                     )
                                 },
-//                                selectedStateCity = state.selectedStateCity,//todo pass the selected state and city
-//                                 todo                                         to the filter to be retained after
-//                                  todo                                        dismiss. String to show when it
-//                                   todo                                       pops back again
+                                //  selectedStateCity = state.selectedStateCity,
+                                // can bue used to pass the selected state and city
+                                //  to the filter to be retained after
+                                //  dismiss. String to show when it
+                                // pops back again
 
                                 onDismiss = { showFilterDialog = false }
                             )
 
-                            /**
-                            Filters(
-                            allStateList = state.allStateFilter,
-                            allCityList = state.allCityFilter,
-                            stateCityList = state.stateCityFilter
-                            )*/
 
                         }
 

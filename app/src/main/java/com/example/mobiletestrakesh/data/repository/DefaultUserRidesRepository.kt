@@ -14,11 +14,24 @@ import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
-
+/**
+ * An implementation of interface UserRidesRepository
+ *
+ *  Depending on abstractions allows us to change the implementations at a later stage
+ *  without changing the function definitions i.e.- like we can cache the data from api in
+ *  and database then provide it further from the cache.
+ *
+ *  It also comes helpful in testing as we can create fake repositories and test with it instead
+ *  doing actual network calls or database calls in actual repository
+ * */
 class DefaultUserRidesRepository @Inject constructor(
     private val api: UserRidesApi
 ) : UserRidesRepository {
 
+    /**
+     * Gets the list of rides from the api and emit different values
+     * at different times based on api call was successful or failure
+     * */
     override suspend fun getRides(): Flow<Resource<List<RidesItem>>> {
         return flow {
             emit(Resource.Loading(true))
@@ -40,19 +53,25 @@ class DefaultUserRidesRepository @Inject constructor(
                 emit(
                     Resource.Success(
                         data = ridesDto.map {
-                            it.toRidesItem()
+                            it.toRidesItem() /** the data layer object is mapped to Domain layer object */
                         })
                 )
             }
         }
     }
 
+    /**
+     * Gets the user from the api and emit different values
+     * at different times based on api call was successful or failure
+     * */
     override suspend fun getUser(): Resource<User> {
         return try {
             val userDto = api.getUserDto()
 
             userDto.let {
-                Resource.Success(data = it.toUser())
+                Resource.Success(
+                    data = it.toUser() /** the data layer object is mapped to Domain layer object */
+                )
             }
 
         } catch (e: IOException) {

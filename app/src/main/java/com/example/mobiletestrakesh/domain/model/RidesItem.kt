@@ -1,5 +1,9 @@
 package com.example.mobiletestrakesh.domain.model
 
+
+/**
+ * A Ride item which is used in the business layer for business logic
+ * */
 data class RidesItem(
     val city: String,
     val date: String,

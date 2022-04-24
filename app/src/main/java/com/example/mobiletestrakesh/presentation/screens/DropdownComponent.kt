@@ -27,89 +27,11 @@ import com.example.mobiletestrakesh.ui.theme.MobileTestRakeshTheme
 
 @Composable
 fun FilterDialog(
-    allStateList: Set<String>,
-    allCityList: Set<String>,
-    stateCityList: Map<String, Set<String>>,
-    selectedStateCity: SelectedStateCity,
-    filterSelectedStateCity: (SelectedStateCity) -> Unit,
-    onDismiss: () -> Unit
-) {
-    var localSelectedStateCity by rememberSaveable {
-        mutableStateOf(SelectedStateCity())
-    }
-
-    localSelectedStateCity = selectedStateCity
-
-
-    Dialog(onDismissRequest = onDismiss) {
-        Column(
-            modifier = Modifier.padding(vertical = 24.dp, horizontal = 30.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Text(
-                text = "Filters",
-                style = MaterialTheme.typography.subtitle1
-            )
-
-            Divider(
-                color = HorizontalDivider,
-                modifier = Modifier.fillMaxWidth(),
-                thickness = 2.dp
-            )
-
-            Spacer(modifier = Modifier.padding(1.dp))
-
-
-            /** State DropDown*/
-            StateDropDown(allStateList.toList(), stateSelected = "", selectedDropdown = { selState ->
-                localSelectedStateCity = localSelectedStateCity.copy(selectedState = selState)
-            })
-
-
-            /**City Dropdown*/
-            if (localSelectedStateCity.selectedState.lowercase()
-                    .trim() == DUMMY_STATE_FILTER.lowercase()
-                    .trim()
-            ) {
-                CityDropDown(
-                    list = allCityList.toList(),
-                    selectedDropdown = { selCity ->
-                        localSelectedStateCity = localSelectedStateCity.copy(selectedCity = selCity)
-                    }
-                )
-
-            } else {
-                val list = stateCityList[localSelectedStateCity.selectedState]?.toList()
-                Log.d("UIFilterCheck", list.toString())
-                CityDropDown(
-                    list = list!!,
-                    selectedDropdown = { selCity ->
-                        localSelectedStateCity = localSelectedStateCity.copy(selectedCity = selCity)
-                    }
-                )
-            }
-
-            Button(
-                onClick = {
-                    filterSelectedStateCity(localSelectedStateCity)
-                    onDismiss()
-                }
-            ) {
-                Text(text = "Apply")
-            }
-
-
-        }
-    }
-}
-
-@Composable
-fun DemoFilterDialog(
     allStateList: List<String>,
     allCityList: List<String>,
     stateCityList: Map<String, List<String>>,
     filterSelectedStateCity: (SelectedStateCity) -> Unit,
-//    selectedStateCity: SelectedStateCity,// todo use this instead of local remembers
+//    selectedStateCity: SelectedStateCity,// can use this instead of local remembers
     onDismiss: () -> Unit
 ) {
 

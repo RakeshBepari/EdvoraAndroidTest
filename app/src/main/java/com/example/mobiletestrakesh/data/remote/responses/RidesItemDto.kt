@@ -1,5 +1,8 @@
 package com.example.mobiletestrakesh.data.remote.responses
 
+/**
+ * Represents a single Ride item from api
+ * */
 data class RidesItemDto(
     val city: String,
     val date: String,

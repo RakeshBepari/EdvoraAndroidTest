@@ -17,6 +17,12 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
+
+/**
+ * A module for providing various dependencies like api and repository
+ * in the scope of the application and there will be a single instance
+ * of these object throughout the Application
+ * */
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
@@ -31,11 +37,12 @@ object AppModule {
             .create(UserRidesApi::class.java)
     }
 
+    /**
+     * Provides a repository of Interface type i.e.- UserRidesRepository
+     * */
     @Provides
     @Singleton
     fun providesDefaultRepository(userRidesApi: UserRidesApi) =
         DefaultUserRidesRepository(userRidesApi) as UserRidesRepository
-
-
 
 }

@@ -6,6 +6,15 @@ import com.example.mobiletestrakesh.domain.model.RidesItem
 import com.example.mobiletestrakesh.domain.model.User
 import com.example.mobiletestrakesh.util.filter.FormatDateTime
 
+
+/**
+ * toRidesItem is a extension function of RidesItemDto
+ * which is used to convert Dto object (i.e. UserDto and RidesItemDto) to domain object (i.e. Rides)
+ *
+ * The purpose of having a domain model is to decouple the remote model
+ * from the model which is used for business logic, cause if we change the dto
+ * the business logic remains unaffected
+ * */
 fun RidesItemDto.toRidesItem(): RidesItem {
     return RidesItem(
         city = city,
