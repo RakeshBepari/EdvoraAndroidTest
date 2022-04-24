@@ -1,6 +1,7 @@
 package com.example.mobiletestrakesh.presentation.screens
 
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import com.example.mobiletestrakesh.R
 import com.example.mobiletestrakesh.domain.model.RidesItem
 import com.example.mobiletestrakesh.other.Constants
@@ -30,6 +32,7 @@ import com.example.mobiletestrakesh.ui.theme.*
 fun MainScreen(ridesViewModel: RidesViewModel = hiltViewModel()) {
 
     val state = ridesViewModel.state
+
 
     Surface() {
         Scaffold(

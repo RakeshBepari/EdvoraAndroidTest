@@ -1,5 +1,6 @@
 package com.example.mobiletestrakesh.presentation.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,17 +10,20 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.example.mobiletestrakesh.domain.model.RidesItem
 import com.example.mobiletestrakesh.ui.theme.FieldsTextColor
 import com.example.mobiletestrakesh.ui.theme.MobileTestRakeshTheme
 
 
-// TODO: Dynamically load the data and images
 @Composable
-fun SingleRideCard(rideItem:RidesItem) {
+fun SingleRideCard(rideItem: RidesItem) {
+
     Card(
         modifier = Modifier
             .wrapContentSize(),
@@ -42,6 +46,7 @@ fun SingleRideCard(rideItem:RidesItem) {
             )
 
 
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -54,7 +59,10 @@ fun SingleRideCard(rideItem:RidesItem) {
 
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 ContentRow(titleText = "Ride Id : ", desText = rideItem.id.toString())
-                ContentRow(titleText = "Origin Station : ", desText = rideItem.originStation.toString())
+                ContentRow(
+                    titleText = "Origin Station : ",
+                    desText = rideItem.originStation.toString()
+                )
                 ContentRow(titleText = "Station Path : ", desText = rideItem.stationPath.toString())
                 ContentRow(titleText = "Date : ", desText = rideItem.date)
                 ContentRow(titleText = "Distance : ", desText = rideItem.distance.toString())
@@ -65,7 +73,7 @@ fun SingleRideCard(rideItem:RidesItem) {
 }
 
 @Composable
-fun ContentRow(titleText: String,desText: String, modifier: Modifier = Modifier) {
+fun ContentRow(titleText: String, desText: String, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Start
@@ -112,7 +120,7 @@ fun PreviewSingleRide() {
                 mapUrl = "",
                 originStation = 45,
                 state = "Meghalaya",
-                stationPath = listOf(25,54,23,13,69),
+                stationPath = listOf(25, 54, 23, 13, 69),
                 distance = 2
             )
         )

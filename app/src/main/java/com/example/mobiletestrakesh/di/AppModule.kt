@@ -1,5 +1,9 @@
 package com.example.mobiletestrakesh.di
 
+import android.app.Application
+import coil.ImageLoader
+import coil.disk.DiskCache
+import coil.memory.MemoryCache
 import com.example.mobiletestrakesh.data.remote.UserRidesApi
 import com.example.mobiletestrakesh.data.repository.DefaultUserRidesRepository
 import com.example.mobiletestrakesh.domain.repository.UserRidesRepository
@@ -7,6 +11,7 @@ import com.example.mobiletestrakesh.other.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -30,6 +35,7 @@ object AppModule {
     @Singleton
     fun providesDefaultRepository(userRidesApi: UserRidesApi) =
         DefaultUserRidesRepository(userRidesApi) as UserRidesRepository
+
 
 
 }
