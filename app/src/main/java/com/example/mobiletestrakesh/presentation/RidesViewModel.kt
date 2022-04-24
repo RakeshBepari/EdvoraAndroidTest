@@ -16,8 +16,11 @@ import com.example.mobiletestrakesh.util.Resource
 import com.example.mobiletestrakesh.util.filter.FormatDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
 import java.util.*
+import java.util.stream.Collectors
+import java.util.stream.Stream
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -28,7 +31,7 @@ class RidesViewModel @Inject constructor(
     private val repository: UserRidesRepository
 ) : ViewModel() {
 
-    var state by mutableStateOf(RidesUserState())
+    var state by mutableStateOf(RidesUserState()) //todo change variable name it feels like state of a country
 
 
     val ridesList: MutableList<RidesItem> = mutableListOf()
@@ -53,7 +56,12 @@ class RidesViewModel @Inject constructor(
             Log.d("ridesListUSEr", ridesList.toString())
             Log.d("ridesListUSEr", user.toString())
 
-            val nearListCalculation=async{ calculateNearestList(userStationCode = user.stationCode, rides = ridesList) }
+            val nearListCalculation = async {
+                calculateNearestList(
+                    userStationCode = user.stationCode,
+                    rides = ridesList
+                )
+            }
 
             nearListCalculation.await()
 
@@ -95,7 +103,19 @@ class RidesViewModel @Inject constructor(
 
         }
 
-        state = state.copy(allStateFilter = stateList.distinct().toList(), allCityFilter = cityList.distinct().toList(), stateCityFilter = stateCityList)
+
+//        val newCityOfState = mutableListOf("City")
+//
+//        stateCityList.replaceAll { k, v ->
+//           newCityOfState.addAll(v)
+//           newCityOfState
+//        }
+
+        state = state.copy(
+            allStateFilter = stateList.distinct().toList(),
+            allCityFilter = cityList.distinct().toList(),
+            stateCityFilter = stateCityList
+        )
         Log.d("CityStateLists", cityList.toString())
         Log.d("CityStateLists", stateCityList.toString())
 
@@ -113,28 +133,118 @@ class RidesViewModel @Inject constructor(
                     RidesFilter.NEAREST -> {
                         state = state.copy(selectedRidesFilter = RidesFilter.NEAREST)
                         state = state.copy(ridesList = nearestRidesList)
+                        //todo change the state state = state.copy( selectedStateCity = TO DEFAULT )
                     }
 
                     RidesFilter.UPCOMING -> {
                         state = state.copy(selectedRidesFilter = RidesFilter.UPCOMING)
                         upcomingFilter()
+                        //todo change the state state = state.copy( selectedStateCity = TO DEFAULT )
                     }
 
                     RidesFilter.PAST -> {
                         state = state.copy(selectedRidesFilter = RidesFilter.PAST)
                         pastFilter()
+                        //todo change the state state = state.copy( selectedStateCity = TO DEFAULT )
                     }
 
                 }
             }
             is RidesListsEvent.FilterStateCity -> {
+                Log.d(TAG+"Filter", event.selectedStateCity.toString())
                 filterWithStateCity(event.selectedStateCity)
+
             }
         }
     }
 
     private fun filterWithStateCity(selectedStateCity: SelectedStateCity) {
-        state = state.copy(selectedStateCity = selectedStateCity)
+        state = state.copy(selectedStateCity = selectedStateCity)  // Retaining the selected city and state string to show in ui after the dialog is dismissed and poped back up
+
+        val isStateDummy = selectedStateCity.selectedState == DUMMY_STATE_FILTER
+        val isCityDummy = selectedStateCity.selectedCity == DUMMY_CITY_FILTER
+
+        if (isStateDummy && isCityDummy) {
+            return
+        }
+
+        if (!isStateDummy) {
+            filterState( selectedState =  selectedStateCity.selectedState)
+            Log.d("MainViewModelFilter",selectedStateCity.toString())
+
+        }
+
+        if (!isCityDummy) {
+            filterCity(selectedCity = selectedStateCity.selectedCity)
+            Log.d("MainViewModelFilter",selectedStateCity.toString())
+
+        }
+
+    }
+
+    private fun filterState(selectedState:String) {
+
+        when(state.selectedRidesFilter){
+            RidesFilter.NEAREST -> {
+
+                val stateFilteredRides = nearestRidesList.filter { it.state == selectedState }
+                Log.d("stateFilteredRides",selectedState)
+                Log.d("stateFilteredRides",stateFilteredRides.toString())
+                state = state.copy(ridesList = stateFilteredRides)
+
+            }
+            RidesFilter.UPCOMING -> {
+
+                val stateFilteredRides = upcomingRidesList.filter { it.state == selectedState }
+                Log.d("stateFilteredRides",selectedState)
+                Log.d("stateFilteredRides",stateFilteredRides.toString())
+                state = state.copy(ridesList = stateFilteredRides)
+
+            }
+            RidesFilter.PAST -> {
+
+                val stateFilteredRides = pastRidesList.filter { it.state == selectedState }
+                Log.d("stateFilteredRides",selectedState)
+                Log.d("stateFilteredRides",stateFilteredRides.toString())
+                state = state.copy(ridesList = stateFilteredRides)
+
+            }
+        }
+
+    }
+
+    private fun filterCity(selectedCity:String) {
+
+
+        when(state.selectedRidesFilter){
+            RidesFilter.NEAREST -> {
+
+                val cityFilteredRides = nearestRidesList.filter { it.city == selectedCity }
+                Log.d("stateFilteredRides",selectedCity)
+                Log.d("stateFilteredRides",cityFilteredRides.toString())
+                state = state.copy(ridesList = cityFilteredRides)
+
+            }
+            RidesFilter.UPCOMING -> {
+
+                val cityFilteredRides = upcomingRidesList.filter { it.city == selectedCity }
+                Log.d("stateFilteredRides",selectedCity)
+                Log.d("stateFilteredRides",cityFilteredRides.toString())
+                state = state.copy(ridesList = cityFilteredRides)
+
+            }
+            RidesFilter.PAST -> {
+
+                val cityFilteredRides = pastRidesList.filter { it.city == selectedCity }
+                Log.d("stateFilteredRides",selectedCity)
+                Log.d("stateFilteredRides",cityFilteredRides.toString())
+                state = state.copy(ridesList = cityFilteredRides)
+
+            }
+        }
+
+
+
     }
 
     private suspend fun getRides() {

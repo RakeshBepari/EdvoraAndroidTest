@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.mobiletestrakesh.R
 import com.example.mobiletestrakesh.other.Constants
+import com.example.mobiletestrakesh.other.Constants.DUMMY_CITY_FILTER
 import com.example.mobiletestrakesh.other.Constants.DUMMY_STATE_FILTER
 import com.example.mobiletestrakesh.presentation.SelectedStateCity
 import com.example.mobiletestrakesh.ui.theme.DialogFilter
@@ -107,15 +108,20 @@ fun DemoFilterDialog(
     allStateList: List<String>,
     allCityList: List<String>,
     stateCityList: Map<String, List<String>>,
-//    selectedStateCity: SelectedStateCity,
+    filterSelectedStateCity: (SelectedStateCity) -> Unit,
+//    selectedStateCity: SelectedStateCity,// todo use this instead of local remembers
     onDismiss: () -> Unit
 ) {
 
     var stateSelected by rememberSaveable {
         mutableStateOf(DUMMY_STATE_FILTER)
     }
+    var citySelected by rememberSaveable {
+        mutableStateOf(DUMMY_CITY_FILTER)
+    }
 
     Log.d("chSELECTEDSTATE",stateSelected)
+    Log.d("chSELECTEDSTATE",citySelected)
 
 
     var cityList by rememberSaveable {
@@ -154,7 +160,9 @@ fun DemoFilterDialog(
                 if (stateSelected == DUMMY_STATE_FILTER) {
                     cityList = allCityList
                 } else {
-                    cityList = stateCityList[stateSelected] ?: allCityList
+                    val cityListWithDummy = mutableListOf(DUMMY_CITY_FILTER)
+                    cityListWithDummy.addAll(stateCityList[stateSelected] ?: allCityList)
+                    cityList = cityListWithDummy
                     Log.d("SELECTEDSTATE",stateSelected)
                     Log.d("SELECTEDSTATE", cityList.toString())
 
@@ -163,15 +171,17 @@ fun DemoFilterDialog(
 
             /**City DropDown*/
             CityDropDown(cityList, selectedDropdown = { selCity ->
-
+                citySelected = selCity
             })
 
             Button(
                 onClick = {
+                    val selectedStateCity = SelectedStateCity(selectedState = stateSelected, selectedCity = citySelected)
+                    filterSelectedStateCity(selectedStateCity)
                     onDismiss()
                 }
             ) {
-                Text(text = "Apply")
+                Text(text = "Apply", color = MaterialTheme.colors.onSurface)
             }
         }
     }

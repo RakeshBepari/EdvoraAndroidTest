@@ -203,7 +203,20 @@ fun MainScreen(ridesViewModel: RidesViewModel = hiltViewModel()) {
                                 allStateList = state.allStateFilter,
                                 allCityList = state.allCityFilter,
                                 stateCityList = state.stateCityFilter,
-//                                selectedStateCity = state.selectedStateCity,
+                                filterSelectedStateCity = { selectedStateCity ->
+
+                                    Log.d("MainScreen", selectedStateCity.toString())
+                                    ridesViewModel.onEvent(
+                                        RidesListsEvent.FilterStateCity(
+                                            selectedStateCity
+                                        )
+                                    )
+                                },
+//                                selectedStateCity = state.selectedStateCity,//todo pass the selected state and city
+//                                 todo                                         to the filter to be retained after
+//                                  todo                                        dismiss. String to show when it
+//                                   todo                                       pops back again
+
                                 onDismiss = { showFilterDialog = false }
                             )
 
